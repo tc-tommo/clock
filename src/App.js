@@ -3,35 +3,13 @@ import { upcomingToday, upcomingTomorrow, upcomingNextWeek, upcomingThisWeek, ge
 
 import React, { useState, useEffect } from 'react';
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCb0p1E-XCBQYQJNrAJvxU9Jt2kQ16J2Ss",
-  authDomain: "tommo-react-clock.firebaseapp.com",
-  projectId: "tommo-react-clock",
-  storageBucket: "tommo-react-clock.appspot.com",
-  messagingSenderId: "958665860360",
-  appId: "1:958665860360:web:b24743610478d3ac7f78bd",
-  measurementId: "G-806FZP42EH"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
 
 
 function App() {
 
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
   useEffect(() => {
-    fetch('./socials.ics')
+    fetch('https://calendar.google.com/calendar/ical/058c96a80a7765f5d396f2ae70e34a9ac9f3c354c7c6b434dc7880e0266f096f%40group.calendar.google.com/public/basic.ics')
       .then(response => response.text())
       .then(data => getEvents(data))
       .catch(error => console.error('Error loading ics file:', error));
