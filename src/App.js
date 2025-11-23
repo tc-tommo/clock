@@ -9,8 +9,17 @@ function App() {
 
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
   useEffect(() => {
-    fetch('https://calendar.google.com/calendar/ical/058c96a80a7765f5d396f2ae70e34a9ac9f3c354c7c6b434dc7880e0266f096f%40group.calendar.google.com/public/basic.ics')
-      .then(response => response.text())
+    const CORS_PROXY = "https://api.allorigins.win/raw?url=";
+    const url = 'https://calendar.google.com/calendar/ical/058c96a80a7765f5d396f2ae70e34a9ac9f3c354c7c6b434dc7880e0266f096f%40group.calendar.google.com/public/basic.ics';
+    const proxiedUrl = CORS_PROXY + encodeURIComponent(url);
+    
+    fetch(proxiedUrl)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text();
+      })
       .then(data => getEvents(data))
       .catch(error => console.error('Error loading ics file:', error));
   }, []);

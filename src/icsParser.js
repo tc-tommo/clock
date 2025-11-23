@@ -2,12 +2,22 @@
 import * as ical from 'ical.js';
 
 
-const GIST_URL = "https://gist.githubusercontent.com/tc-tommo/f190f6e997f61982c36b794060a99f7f/raw/"
+const URL = "https://calendar.google.com/calendar/ical/058c96a80a7765f5d396f2ae70e34a9ac9f3c354c7c6b434dc7880e0266f096f%40group.calendar.google.com/public/basic.ics"
+
+// CORS proxy to bypass CORS restrictions
+const CORS_PROXY = "https://api.allorigins.win/raw?url=";
 
 function getIcsData(url) {
+    // Use CORS proxy to fetch the ICS file
+    const proxiedUrl = CORS_PROXY + encodeURIComponent(url);
     
-    return fetch(url)
-        .then(response => response.text())
+    return fetch(proxiedUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.text();
+        })
         .then(data => {
             return data;
         });
@@ -17,7 +27,7 @@ function getIcsData(url) {
 // if error, log and allEvents = []
 let allEvents = [];
 
-getIcsData(GIST_URL)
+getIcsData(URL)
     .then(data => {
         console.log(data);
         allEvents = getEvents(data);
@@ -82,6 +92,8 @@ export function upcomingThisWeek() {
     const thisWeekStart = new Date();
     // truncate to midnight
     thisWeekStart.setHours(0, 0, 0, 0);
+    // exclude tomorrow
+    thisWeekStart.setDate(thisWeekStart.getDate() + 2   );
     const startDate = thisWeekStart.getDate();
     const thisWeekEnd = new Date(thisWeekStart);
     // set to sunday of this week
